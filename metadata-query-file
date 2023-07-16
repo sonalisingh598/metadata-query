@@ -1,0 +1,14 @@
+import requests
+from google.auth import compute_engine
+
+def query_instance_metadata(key):
+    credentials, project = compute_engine.metadata.get_project_id()
+    headers = {"Metadata-Flavor": "Google"}
+    metadata_url = f"http://metadata.google.internal/computeMetadata/v1/instance/attributes/{key}"
+    response = requests.get(metadata_url, headers=headers, timeout=3)
+    return response.text
+
+if __name__ == "__main__":
+    key = "ssh-keys"
+    metadata_value = query_instance_metadata(key)
+    print(metadata_value)
